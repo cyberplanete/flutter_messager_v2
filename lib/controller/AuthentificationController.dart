@@ -27,40 +27,44 @@ class _AuthentificationControllerState
         title: Text('Authentification'),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.all(20),
-              width: MediaQuery.of(context).size.width - 40,
-              height: MediaQuery.of(context).size.height / 2,
-              child: Card(
-                elevation: 7.5,
-                child: Container(
-                  margin: EdgeInsets.only(left: 5, right: 5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: listTextFields(),
+        ///Permet de cacher le clavier onTap en dehors du textField
+        child: InkWell(
+          onTap: (() => FocusScope.of(context).requestFocus(FocusNode())),
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.all(20),
+                width: MediaQuery.of(context).size.width - 40,
+                height: MediaQuery.of(context).size.height / 2,
+                child: Card(
+                  elevation: 7.5,
+                  child: Container(
+                    margin: EdgeInsets.only(left: 5, right: 5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: listTextFields(),
+                    ),
                   ),
                 ),
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _isUserConnected = !_isUserConnected;
-                });
-              },
-              child: Text((_isUserConnected)
-                  ? "Authentification"
-                  : "Creation de compte"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _gestionDeConnexion();
-              },
-              child: Text('Connecté'),
-            )
-          ],
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _isUserConnected = !_isUserConnected;
+                  });
+                },
+                child: Text((_isUserConnected)
+                    ? "Authentification"
+                    : "Creation de compte"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _gestionDeConnexion();
+                },
+                child: Text('Connecté'),
+              )
+            ],
+          ),
         ),
       ),
     );

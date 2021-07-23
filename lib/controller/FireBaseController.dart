@@ -1,13 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseController {
   ///Autorisation
-  static final firestore_instance = FirebaseFirestore.instance;
+  static final firebase_realtime_instance =
+      FirebaseDatabase.instance.reference();
 
-  ///base de donnée utilisateur
-  final fireStore_collectionUtilisateurs =
-      firestore_instance.collection("utilisateurs");
+  ///base de donnée utilisateur realtimeDatabase
+  final firebase_realtime_collectionUtilisateurs =
+      firebase_realtime_instance.child("utilisateurs");
 
   Future<User?> seConnecter(String mail, String mdp) async {
     final UserCredential user = await FirebaseAuth.instance
@@ -20,7 +21,8 @@ class FirebaseController {
       String email, String mdp, String prenom, String nom) async {
     final UserCredential create = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: mdp);
-    String utilisateurUid = create.user!.uid;
+    User user = create.user!;
+    String utilisateurUid = user.uid;
     Map<String, dynamic> userData = {
       "uid": utilisateurUid,
       "nom": nom,
@@ -28,7 +30,9 @@ class FirebaseController {
       "email": email,
       "mdp": mdp,
     };
-    fireStore_collectionUtilisateurs.doc(utilisateurUid).set(userData);
-    return create.user;
+    firebase_realtime_collectionUtilisateurs
+        .child(utilisateurUid)
+        .set(userData);
+    return user;
   }
 }

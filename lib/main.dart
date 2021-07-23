@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_messager_v2/controller/AuthentificationController.dart';
 import 'package:flutter_messager_v2/controller/MainAppController.dart';
 
+// @dart=2.9
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

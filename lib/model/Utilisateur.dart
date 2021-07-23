@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 
 class Utilisateur {
@@ -9,10 +9,10 @@ class Utilisateur {
   String? adresseEmail;
   String? initiales;
 
-  /// recupéation depuis firestore
-  Utilisateur(AsyncSnapshot documentSnapshot) {
-    Map<String, dynamic> listUtilisateurs = documentSnapshot.data;
-    this.uid = listUtilisateurs[uid];
+  /// recupéation depuis firebaseRealtime
+  Utilisateur(DataSnapshot snapshot) {
+    Map<String, dynamic> listUtilisateurs = snapshot.value;
+    this.uid = snapshot.key;
     this.prenom = listUtilisateurs[prenom];
     this.imageUrl = listUtilisateurs[imageUrl];
     this.nom = listUtilisateurs[nom];
