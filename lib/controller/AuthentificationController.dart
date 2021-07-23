@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_messager_v2/controller/FireBaseController.dart';
 
 class AuthentificationController extends StatefulWidget {
   const AuthentificationController({Key? key}) : super(key: key);
@@ -111,11 +112,23 @@ class _AuthentificationControllerState
       if (_motDePasse != null) {
         if (_isUserConnected) {
           //Connexion
+          FirebaseController()
+              .seConnecter(_adresseEmail, _motDePasse)
+              .then((value) => print(value!.uid))
+              .catchError((onError) {
+            alerte(onError.toString());
+          });
         } else {
           //Création de compte
           if (_prenom != null) {
             if (_nom != null) {
               //Méthode pour créer un utilisateur
+              FirebaseController()
+                  .creationDeCompte(_adresseEmail, _motDePasse, _prenom, _nom)
+                  .then((value) => print(value!.uid))
+                  .catchError((onError) {
+                alerte(onError.toString());
+              });
             } else {
               //Alerte pas de nom
               alerte("Aucun nom n'à été renseigné");
