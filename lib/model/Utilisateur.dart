@@ -9,14 +9,14 @@ class Utilisateur {
   String? adresseEmail;
   String? initiales;
 
-  /// recupéation depuis firebaseRealtime
+  /// recupération depuis firebaseRealtime
   Utilisateur(DataSnapshot snapshot) {
-    Map<String, dynamic> listUtilisateurs = snapshot.value;
+    Map listUtilisateurs = snapshot.value;
     this.uid = snapshot.key;
-    this.prenom = listUtilisateurs[prenom];
-    this.imageUrl = listUtilisateurs[imageUrl];
-    this.nom = listUtilisateurs[nom];
-    this.adresseEmail = listUtilisateurs[adresseEmail];
+    this.prenom = listUtilisateurs["prenom"];
+    this.imageUrl = listUtilisateurs["imageUrl"];
+    this.nom = listUtilisateurs["nom"];
+    this.adresseEmail = listUtilisateurs["adresseEmail"];
     if (prenom != null && nom != null) {
       if (prenom!.length > 0 && nom!.length > 0) {
         this.initiales = prenom![0] + nom![0];
