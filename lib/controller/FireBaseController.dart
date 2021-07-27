@@ -1,14 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseController {
   ///Autorisation
-  static final firebase_realtime_entrypoint =
-      FirebaseDatabase.instance.reference();
+  static final firebase_auth_instance = FirebaseAuth.instance;
 
   ///base de donnée utilisateur realtimeDatabase
-  final firebase_realtime_collectionUtilisateurs =
-      firebase_realtime_entrypoint.child("utilisateurs");
+  static final firestore_instance = FirebaseFirestore.instance;
+  final firebase_firestore_collectionUtilisateurs =
+      firestore_instance.collection("utilisateurs");
 
   Future<User?> seConnecter(String mail, String mdp) async {
     final UserCredential user = await FirebaseAuth.instance
@@ -35,8 +35,6 @@ class FirebaseController {
   }
 
   void AddUser(String utilisateurUid, Map<String, String> userData) {
-    firebase_realtime_collectionUtilisateurs
-        .child(utilisateurUid)
-        .set(userData);
+    firebase_firestore_collectionUtilisateurs.doc(utilisateurUid).set(userData);
   }
 }
