@@ -3,6 +3,10 @@ import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_messager_v2/controller/FireBaseController.dart';
+import 'package:flutter_messager_v2/views/MyButtonGradient.dart';
+import 'package:flutter_messager_v2/views/MyPaddingCustomWith.dart';
+import 'package:flutter_messager_v2/views/constants.dart';
+import 'package:flutter_messager_v2/views/my_custom_Paint.dart';
 
 class AuthentificationController extends StatefulWidget {
   const AuthentificationController({Key? key}) : super(key: key);
@@ -20,57 +24,62 @@ class _AuthentificationControllerState
   var _motDePasse;
   var _nom;
   var _prenom;
+
+  PageController? _pageController;
+
+  @override
+  void initState() {
+    _pageController = PageController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController!.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Authentification'),
       ),
-      body: SingleChildScrollView(
-        ///Permet de cacher le clavier onTap en dehors du textField
-        child: InkWell(
-          onTap: (() => FocusScope.of(context).requestFocus(FocusNode())),
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.all(20),
-                width: MediaQuery.of(context).size.width - 40,
-                height: MediaQuery.of(context).size.height / 2,
-                child: Card(
-                  elevation: 7.5,
-                  child: Container(
-                    margin: EdgeInsets.only(left: 5, right: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: listTextFields(),
-                    ),
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _isUserConnected = !_isUserConnected;
-                  });
-                },
-                child: Text((_isUserConnected)
-                    ? "Authentification"
-                    : "Creation de compte"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  _gestionDeConnexion();
-                },
-                child: Text('Connecté'),
-              )
-            ],
+      body: Column(
+        children: [
+          Expanded(
+            child: PageView(
+              //Retourne l'index de la page
+              controller: _pageController,
+              children: [viewSignIn(0), viewSignIn(1)],
+            ),
           ),
-        ),
+
+
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _isUserConnected = !_isUserConnected;
+              });
+            },
+            child: Text((_isUserConnected)
+                ? "Authentification"
+                : "Creation de compte"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              //TODO
+              // _gestionDeConnexion();
+            },
+            child: Text('Connecté'),
+          ), SizedBox(height: 150,)
+
+        ],
       ),
     );
   }
 
-  List<Widget> listTextFields() {
+  List<Widget> listTextFields(bool isUserConnected) {
     List<Widget> widgets = [];
     widgets.add(TextField(
       decoration: InputDecoration(hintText: 'Adresse Email'),
@@ -111,7 +120,7 @@ class _AuthentificationControllerState
     return widgets;
   }
 
-  void _gestionDeConnexion() {
+  void _gestionDeConnexion(bool bool) {
     if (_adresseEmail != null) {
       if (_motDePasse != null) {
         if (_isUserConnected) {
@@ -170,5 +179,47 @@ class _AuthentificationControllerState
                   actions: [okButton],
                 );
         });
+  }
+
+  ///Se positionne dessous les boutons - Affiche les vues contenant des textfields permettant la connexion ou la creation du compte
+  ///l'index 0 est pour un utilisateur deja enregistré
+  Widget viewSignIn(int index) {
+    return Column(
+      children: [
+        MyPaddingCustomWith(
+          top: 50,
+          bottom:50,
+
+          ///Padding a partir du bord de l'écran
+          left: 20,
+          right: 20,
+          unWidget: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            color: cColorWhite,
+            elevation: 7,
+
+            ///Card invisible si pas de child !!!
+            child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                ///l'index 0 est pour un utilisateur deja enregistré
+                children: [
+                  Container(
+                    child: Column(
+                      children: listTextFields((index == 0)),
+                    ),
+                    margin: EdgeInsets.only(
+                        left: 20, right: 20, top: 15, bottom: 15),
+                  )
+                ]
+                //listOfUserTextField((index == 0)),
+                ),
+          ),
+        ),
+
+
+      ],
+    );
   }
 }
