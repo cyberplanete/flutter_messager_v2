@@ -20,6 +20,7 @@ class _AuthentificationControllerState
   var _motDePasse;
   var _nom;
   var _prenom;
+  var _imageUrl = "";
 
   PageController? _pageController;
 
@@ -130,7 +131,8 @@ class _AuthentificationControllerState
             if (_nom != null) {
               //Méthode pour créer un utilisateur
               FirebaseController()
-                  .creationDeCompte(_adresseEmail, _motDePasse, _prenom, _nom)
+                  .creationDeCompte(
+                      _adresseEmail, _motDePasse, _prenom, _nom, _imageUrl)
                   .then((value) => print(value!.uid))
                   .catchError((onError) {
                 alerte(onError.toString());
