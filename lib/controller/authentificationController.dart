@@ -1,12 +1,8 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_messager_v2/controller/FireBaseController.dart';
-import 'package:flutter_messager_v2/views/MyButtonGradient.dart';
+import 'package:flutter_messager_v2/controller/fireBaseController.dart';
 import 'package:flutter_messager_v2/views/MyPaddingCustomWith.dart';
 import 'package:flutter_messager_v2/views/constants.dart';
-import 'package:flutter_messager_v2/views/my_custom_Paint.dart';
 
 class AuthentificationController extends StatefulWidget {
   const AuthentificationController({Key? key}) : super(key: key);
@@ -55,25 +51,22 @@ class _AuthentificationControllerState
             ),
           ),
 
-
           TextButton(
             onPressed: () {
               setState(() {
                 _isUserConnected = !_isUserConnected;
               });
             },
-            child: Text((_isUserConnected)
-                ? "Authentification"
-                : "Creation de compte"),
+            child: Text(
+                (_isUserConnected) ? "Authentification" : "Creation de compte"),
           ),
           ElevatedButton(
             onPressed: () {
               //TODO
-              // _gestionDeConnexion();
+              _gestionDeConnexion();
             },
             child: Text('Connecté'),
-          ), SizedBox(height: 150,)
-
+          ), // SizedBox(height: 10,)
         ],
       ),
     );
@@ -120,7 +113,7 @@ class _AuthentificationControllerState
     return widgets;
   }
 
-  void _gestionDeConnexion(bool bool) {
+  void _gestionDeConnexion() {
     if (_adresseEmail != null) {
       if (_motDePasse != null) {
         if (_isUserConnected) {
@@ -184,42 +177,43 @@ class _AuthentificationControllerState
   ///Se positionne dessous les boutons - Affiche les vues contenant des textfields permettant la connexion ou la creation du compte
   ///l'index 0 est pour un utilisateur deja enregistré
   Widget viewSignIn(int index) {
-    return Column(
-      children: [
-        MyPaddingCustomWith(
-          top: 50,
-          bottom:50,
+    /// Dans un SingleChildScrollView pour palier au problème de "A RenderFlex overflowed"
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          MyPaddingCustomWith(
+            top: 50,
+            bottom: 50,
 
-          ///Padding a partir du bord de l'écran
-          left: 20,
-          right: 20,
-          unWidget: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
+            ///Padding a partir du bord de l'écran
+            left: 20,
+            right: 20,
+            unWidget: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              color: cColorWhite,
+              elevation: 7,
+
+              ///Card invisible si pas de child !!!
+              child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                  ///l'index 0 est pour un utilisateur deja enregistré
+                  children: [
+                    Container(
+                      child: Column(
+                        children: listTextFields((index == 0)),
+                      ),
+                      margin: EdgeInsets.only(
+                          left: 20, right: 20, top: 15, bottom: 15),
+                    )
+                  ]
+                  //listOfUserTextField((index == 0)),
+                  ),
             ),
-            color: cColorWhite,
-            elevation: 7,
-
-            ///Card invisible si pas de child !!!
-            child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-                ///l'index 0 est pour un utilisateur deja enregistré
-                children: [
-                  Container(
-                    child: Column(
-                      children: listTextFields((index == 0)),
-                    ),
-                    margin: EdgeInsets.only(
-                        left: 20, right: 20, top: 15, bottom: 15),
-                  )
-                ]
-                //listOfUserTextField((index == 0)),
-                ),
           ),
-        ),
-
-
-      ],
+        ],
+      ),
     );
   }
 }

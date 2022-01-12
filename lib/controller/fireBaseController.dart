@@ -3,18 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseController {
   ///Autorisation
-  static final firebase_auth_instance = FirebaseAuth.instance;
+  final firebase_auth_instance = FirebaseAuth.instance;
 
   ///base de donnée utilisateur realtimeDatabase
   static final firestore_instance = FirebaseFirestore.instance;
-  final firebase_firestore_collectionUtilisateurs =
+  final firebase_collectionUtilisateurs =
       firestore_instance.collection("utilisateurs");
 
-  Future<User?> seConnecter(String mail, String mdp) async {
-    final UserCredential user = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: mail, password: mdp);
-    return user.user;
-  }
+
 
   /// Methode permettant la création du compte utilisateur sur Firebase
   Future<User?> creationDeCompte(
@@ -33,8 +29,15 @@ class FirebaseController {
     AddUser(utilisateurUid, userData);
     return user;
   }
-
+  /// Ajouter un utilisateur dans la base de données de Firebase
   void AddUser(String utilisateurUid, Map<String, String> userData) {
-    firebase_firestore_collectionUtilisateurs.doc(utilisateurUid).set(userData);
+    firebase_collectionUtilisateurs.doc(utilisateurUid).set(userData);
+  }
+
+  /// Connecter un utilisateur à la base de données Firebase
+  Future<User?> seConnecter(String mail, String mdp) async {
+    final UserCredential user = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: mail, password: mdp);
+    return user.user;
   }
 }

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_messager_v2/controller/AuthentificationController.dart';
-import 'package:flutter_messager_v2/controller/MainAppController.dart';
+import 'package:flutter_messager_v2/controller/authentificationController.dart';
+import 'package:flutter_messager_v2/controller/mainAppController.dart';
 
 // @dart=2.9
 void main() async {
