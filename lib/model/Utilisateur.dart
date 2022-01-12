@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 
 class Utilisateur {
   String? uid;
@@ -10,24 +9,25 @@ class Utilisateur {
   String? initiales;
 
   /// recupération depuis firebaseRealtime
-  Utilisateur(AsyncSnapshot snapshot) {
-    Map<String, dynamic> listUtilisateurs = snapshot.data();
-    this.uid = listUtilisateurs["uid"];
-    this.prenom = listUtilisateurs["prenom"];
-    this.imageUrl = listUtilisateurs["imageUrl"];
-    this.nom = listUtilisateurs["nom"];
-    this.adresseEmail = listUtilisateurs["adresseEmail"];
+  Utilisateur(DocumentSnapshot snapshot) {
+    DocumentSnapshot<Object?> map = snapshot;
+
+    this.uid = map.get("uid");
+    this.prenom = map.get("prenom");
+    this.imageUrl = map.get("imageUrl");
+    this.nom = map.get("nom");
+    this.adresseEmail = map.get("email");
     if (prenom != null && nom != null) {
       if (prenom!.length > 0 && nom!.length > 0) {
         this.initiales = prenom![0] + nom![0];
-        this.initiales = listUtilisateurs[initiales];
+        //this.initiales = map.get("initiales");
       }
     } else {
       this.initiales = '';
     }
   }
 
-  /// vers firestore
+  /// Pour l'envoyer vers firebase
   Map toMap() {
     return {
       "uid": uid,
