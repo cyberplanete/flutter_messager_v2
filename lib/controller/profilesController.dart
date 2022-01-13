@@ -13,6 +13,8 @@ class ProfilesController extends StatefulWidget {
 class _ProfilesControllerState extends State<ProfilesController> {
   Utilisateur? utilisateur;
   User? currentUser = FirebaseController().firebase_auth_instance.currentUser;
+  String prenom = "";
+  String nom = "";
 
   @override
   void initState() {
@@ -29,15 +31,34 @@ class _ProfilesControllerState extends State<ProfilesController> {
   Widget build(BuildContext context) {
     return (utilisateur == null)
         ? Center(
-            child: Text("Profiles uid:${currentUser!.uid}"),
+            child: Text("Chargement ..."),
           )
-        : Scaffold(
-            appBar: AppBar(
-              title: Text("${utilisateur?.prenom} ${utilisateur?.nom}"),
+        : SingleChildScrollView(
+            child: Container(
+            margin: EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextField(
+                  decoration: InputDecoration(hintText: utilisateur?.prenom),
+                  onChanged: (str) {
+                    setState(() {
+                      prenom = str;
+                    });
+                  },
+                ),
+                TextField(
+                  decoration: InputDecoration(hintText: utilisateur?.nom),
+                  onChanged: (str) {
+                    setState(() {
+                      nom = str;
+                    });
+                  },
+                ),
+                ElevatedButton(child: Text("Sauvegarder"), onPressed: () {}),
+                TextButton(child: Text("Se déconnecter"), onPressed: () {})
+              ],
             ),
-            body: Center(
-              child: Text("${utilisateur?.uid}"),
-            ),
-          );
+          ));
   }
 }
