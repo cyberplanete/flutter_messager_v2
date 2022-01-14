@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_messager_v2/controller/fireBaseController.dart';
 import 'package:flutter_messager_v2/model/Utilisateur.dart';
@@ -56,9 +57,45 @@ class _ProfilesControllerState extends State<ProfilesController> {
                   },
                 ),
                 ElevatedButton(child: Text("Sauvegarder"), onPressed: () {}),
-                TextButton(child: Text("Se déconnecter"), onPressed: () {})
+                TextButton(
+                    child: Text("Se déconnecter"),
+                    onPressed: () {
+                      logOut();
+                    })
               ],
             ),
           ));
+  }
+
+  Future<void> logOut() async {
+    Text titre = Text("Se déconnecter");
+    Text contenant = Text("Etes vous sur de vouloir vous deconnecter ?");
+    ElevatedButton noBtn = ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text("non"));
+    ElevatedButton yesBtn = ElevatedButton(
+        onPressed: () {
+          FirebaseController()
+              .seDeconnecter()
+              .then((bool) => Navigator.of(context).pop());
+        },
+        child: Text("oui"));
+    return showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return (Theme.of(context).platform == TargetPlatform.iOS)
+              ? CupertinoAlertDialog(
+                  title: titre,
+                  content: contenant,
+                  actions: [yesBtn, noBtn],
+                )
+              : AlertDialog(
+                  title: titre,
+                  content: contenant,
+                  actions: [yesBtn, noBtn],
+                );
+        });
   }
 }

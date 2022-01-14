@@ -49,6 +49,11 @@ class FirebaseController {
     return user.user;
   }
 
+  ///Methode pour la deconnexion de l'utilisateur
+  Future<bool> seDeconnecter() async {
+    return firebase_auth_instance.signOut().then((value) => true);
+  }
+
   Future<Utilisateur> getUtilisateur(String uid) async {
     DocumentSnapshot snapshot =
         await firebase_collectionUtilisateurs.doc(uid).get();
