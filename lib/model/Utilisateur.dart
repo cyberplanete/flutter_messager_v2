@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Utilisateur {
   String uid = "";
-  String? prenom;
-  String? nom;
-  String? imageUrl;
-  String? adresseEmail;
-  String? initiales;
+  String prenom = "";
+  String nom = "";
+  String imageUrl = "";
+  String adresseEmail = "";
+  String initiales = "";
 
   /// recupération depuis firebaseRealtime
   Utilisateur(DocumentSnapshot snapshot) {
@@ -16,10 +16,10 @@ class Utilisateur {
     this.prenom = map.get("prenom");
     this.imageUrl = map.get("imageUrl");
     this.nom = map.get("nom");
-    this.adresseEmail = map.get("email");
+    this.adresseEmail = map.get("adresseEmail");
     if (prenom != null && nom != null) {
-      if (prenom!.length > 0 && nom!.length > 0) {
-        this.initiales = prenom![0] + nom![0];
+      if (prenom.length > 0 && nom.length > 0) {
+        this.initiales = prenom[0] + nom[0];
         //this.initiales = map.get("initiales");
       }
     } else {

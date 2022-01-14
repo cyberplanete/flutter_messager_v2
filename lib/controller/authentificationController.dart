@@ -63,7 +63,7 @@ class _AuthentificationControllerState
           ),
           ElevatedButton(
             onPressed: () {
-              //TODO
+
               _gestionDeConnexion();
             },
             child: Text('Connecté'),

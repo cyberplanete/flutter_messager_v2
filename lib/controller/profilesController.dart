@@ -11,15 +11,16 @@ class ProfilesController extends StatefulWidget {
   _ProfilesControllerState createState() => _ProfilesControllerState();
 }
 
+//TODO pull to refresh
 class _ProfilesControllerState extends State<ProfilesController> {
   Utilisateur? utilisateur;
   User? currentUser = FirebaseController().firebase_auth_instance.currentUser;
-  String? prenom = "";
-  String? nom = "";
+  String? prenom;
+  String? nom;
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     _getUserProfile();
   }

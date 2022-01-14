@@ -30,7 +30,7 @@ class FirebaseController {
       "uid": utilisateurUid,
       "nom": nom,
       "prenom": prenom,
-      "email": email,
+      "adresseEmail": email,
       "imageUrl": imageUrl,
     };
     AddOrModifyUser(utilisateurUid, userData);

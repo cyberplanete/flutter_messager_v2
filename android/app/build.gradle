@@ -34,7 +34,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+
         applicationId "net.cyberplanete.flutter_messager_v2"
         minSdkVersion 16
         targetSdkVersion 30
