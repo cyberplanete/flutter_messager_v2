@@ -93,7 +93,6 @@ class MyCustomPaintSignIn extends CustomPainter {
 
   ///Par rapport à MyCustomPaintSignIn
   bool shouldRepaint(MyCustomPaintSignIn oldDelegate) {
-    // TODO: implement shouldRepaint
     return true;
   }
 }

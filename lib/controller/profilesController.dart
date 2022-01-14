@@ -20,7 +20,6 @@ class _ProfilesControllerState extends State<ProfilesController> {
 
   @override
   void initState() {
-
     super.initState();
     _getUserProfile();
   }
