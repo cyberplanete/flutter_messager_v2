@@ -33,12 +33,12 @@ class FirebaseController {
       "email": email,
       "imageUrl": imageUrl,
     };
-    AddUser(utilisateurUid, userData);
+    AddOrModifyUser(utilisateurUid, userData);
     return user;
   }
 
-  /// Ajouter un utilisateur dans la base de données de Firebase
-  void AddUser(String utilisateurUid, Map<String, String> userData) {
+  /// Ajouter ou modifier un utilisateur dans la base de données de Firebase
+  void AddOrModifyUser(String utilisateurUid, Map<String, String?> userData) {
     firebase_collectionUtilisateurs.doc(utilisateurUid).set(userData);
   }
 

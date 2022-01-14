@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Utilisateur {
-  String? uid;
+  String uid = "";
   String? prenom;
   String? nom;
   String? imageUrl;
@@ -28,7 +28,7 @@ class Utilisateur {
   }
 
   /// Pour l'envoyer vers firebase
-  Map toMap() {
+  Map<String, String?> toMap() {
     return {
       "uid": uid,
       "prenom": prenom,

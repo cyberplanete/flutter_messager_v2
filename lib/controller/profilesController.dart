@@ -14,18 +14,14 @@ class ProfilesController extends StatefulWidget {
 class _ProfilesControllerState extends State<ProfilesController> {
   Utilisateur? utilisateur;
   User? currentUser = FirebaseController().firebase_auth_instance.currentUser;
-  String prenom = "";
-  String nom = "";
+  String? prenom = "";
+  String? nom = "";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    FirebaseController().getUtilisateur(currentUser!.uid).then((value) {
-      setState(() {
-        this.utilisateur = value;
-      });
-    });
+    _getUserProfile();
   }
 
   @override
@@ -56,7 +52,8 @@ class _ProfilesControllerState extends State<ProfilesController> {
                     });
                   },
                 ),
-                ElevatedButton(child: Text("Sauvegarder"), onPressed: () {}),
+                ElevatedButton(
+                    child: Text("Sauvegarder"), onPressed: saveChanges),
                 TextButton(
                     child: Text("Se déconnecter"),
                     onPressed: () {
@@ -97,5 +94,26 @@ class _ProfilesControllerState extends State<ProfilesController> {
                   actions: [yesBtn, noBtn],
                 );
         });
+  }
+
+  saveChanges() {
+    Map<String, String?> map = utilisateur!.toMap();
+    if (prenom != null && prenom != "") {
+      map["prenom"] = prenom!;
+    }
+    if (nom != null && nom != "") {
+      map["nom"] = nom!;
+    }
+    FirebaseController().AddOrModifyUser(utilisateur!.uid, map);
+    _getUserProfile();
+  }
+
+  /// Methode permettant d'obtenir l'utilisateur
+  _getUserProfile() {
+    FirebaseController().getUtilisateur(currentUser!.uid).then((value) {
+      setState(() {
+        this.utilisateur = value;
+      });
+    });
   }
 }
