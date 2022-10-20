@@ -46,7 +46,7 @@ class _AuthentificationControllerState
         children: [
           Expanded(
             child: PageView(
-              //Retourne l'index de la page
+              // Controleur de la page
               controller: _pageController,
               children: [viewSignIn(0), viewSignIn(1)],
             ),
@@ -72,8 +72,54 @@ class _AuthentificationControllerState
     );
   }
 
+  ///Se positionne dessous les boutons - Affiche les vues contenant des textfields permettant la connexion ou la creation du compte
+  ///l'index 0 est pour un utilisateur deja enregistré
+  Widget viewSignIn(int index) {
+    /// Dans un SingleChildScrollView pour palier au problème de "A RenderFlex overflowed"
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          MyPaddingCustomWith(
+            top: 50,
+            bottom: 50,
+
+            ///Padding a partir du bord de l'écran
+            left: 20,
+            right: 20,
+            unWidget: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              color: cColorWhite,
+              elevation: 7,
+
+              ///Card invisible si pas de child !!!
+              child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                  ///l'index 0 est pour un utilisateur deja enregistré
+                  children: [
+                    Container(
+                      child: Column(
+                        children: listTextFields((index == 0)),
+                      ),
+                      margin: EdgeInsets.only(
+                          left: 20, right: 20, top: 15, bottom: 15),
+                    )
+                  ]
+                  //listOfUserTextField((index == 0)),
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ///Liste des textfields pour la connexion ou la creation de compte
   List<Widget> listTextFields(bool isUserConnected) {
+    // On cree une liste de textfield
     List<Widget> widgets = [];
+    // Si utilisateur connecté on affiche que les textfields pour l'adresse email et le mot de passe
     widgets.add(TextField(
       decoration: InputDecoration(hintText: 'Adresse Email'),
       onChanged: (text) {
@@ -94,7 +140,7 @@ class _AuthentificationControllerState
         },
       ),
     );
-
+// Si utilisateur non connecté on affiche les textfields pour le nom, le prenom
     if (!_isUserConnected) {
       widgets.add(TextField(
         decoration: InputDecoration(hintText: 'Prénom'),
@@ -173,48 +219,5 @@ class _AuthentificationControllerState
                   actions: [okButton],
                 );
         });
-  }
-
-  ///Se positionne dessous les boutons - Affiche les vues contenant des textfields permettant la connexion ou la creation du compte
-  ///l'index 0 est pour un utilisateur deja enregistré
-  Widget viewSignIn(int index) {
-    /// Dans un SingleChildScrollView pour palier au problème de "A RenderFlex overflowed"
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          MyPaddingCustomWith(
-            top: 50,
-            bottom: 50,
-
-            ///Padding a partir du bord de l'écran
-            left: 20,
-            right: 20,
-            unWidget: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              color: cColorWhite,
-              elevation: 7,
-
-              ///Card invisible si pas de child !!!
-              child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-                  ///l'index 0 est pour un utilisateur deja enregistré
-                  children: [
-                    Container(
-                      child: Column(
-                        children: listTextFields((index == 0)),
-                      ),
-                      margin: EdgeInsets.only(
-                          left: 20, right: 20, top: 15, bottom: 15),
-                    )
-                  ]
-                  //listOfUserTextField((index == 0)),
-                  ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

@@ -8,13 +8,15 @@ import 'firebase_options.dart';
 
 // @dart=2.9
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Cette ligne est importante pour l'initialisation de firebase
+  // j'attends que firebase soit initialisé
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  runApp(MyApp()); // je lance l'application
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  // Ce widget est notre racine de l'application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,13 +25,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: handleAuth(),
+      home: gestionAuthentification(),
     );
   }
 }
 
-/// Gestion de l'authentification
-Widget handleAuth() {
+// Gestion de l'authentification
+Widget gestionAuthentification() {
   return StreamBuilder<User?>(
       //Notifies about changes to the user's sign-in state (such as sign-in or sign-out).
       stream: FirebaseAuth.instance.authStateChanges(),
