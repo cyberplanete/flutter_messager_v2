@@ -14,7 +14,7 @@ class AuthentificationController extends StatefulWidget {
 
 class _AuthentificationControllerState
     extends State<AuthentificationController> {
-  // Si True, création de compte, false identification
+  // par défaut, l'utilisateur est connecté (true) ou non (false).
   bool _isUserConnected = true;
   var _adresseEmail;
   var _motDePasse;
@@ -26,12 +26,14 @@ class _AuthentificationControllerState
 
   @override
   void initState() {
+    /// Initialisation de la page de connexion
     _pageController = PageController();
     super.initState();
   }
 
   @override
   void dispose() {
+    /// Dispose le PageController pour éviter les fuites de mémoire
     _pageController!.dispose();
     super.dispose();
   }
@@ -48,22 +50,24 @@ class _AuthentificationControllerState
             child: PageView(
               // Controleur de la page
               controller: _pageController,
-              children: [viewSignIn(0), viewSignIn(1)],
+              children: [viewSignInWidget(0), viewSignInWidget(1)],
             ),
           ),
 
           TextButton(
             onPressed: () {
               setState(() {
-                _isUserConnected = !_isUserConnected;
+                _isUserConnected =
+                    !_isUserConnected; // changement de l'état de l'utilisateur (connecté ou non) lors du clic sur le bouton
               });
             },
+            // affichage du texte du bouton en fonction de l'état de l'utilisateur
             child: Text(
                 (_isUserConnected) ? "Authentification" : "Creation de compte"),
           ),
           ElevatedButton(
             onPressed: () {
-              _gestionDeConnexion();
+              _gestionnaireDeConnexion();
             },
             child: Text('Connecté'),
           ), // SizedBox(height: 10,)
@@ -72,18 +76,15 @@ class _AuthentificationControllerState
     );
   }
 
-  ///Se positionne dessous les boutons - Affiche les vues contenant des textfields permettant la connexion ou la creation du compte
-  ///l'index 0 est pour un utilisateur deja enregistré
-  Widget viewSignIn(int index) {
+  /// View de connexion ou de création de compte en fonction de l'index passé en paramètre (0 ou 1)
+  Widget viewSignInWidget(int index) {
     /// Dans un SingleChildScrollView pour palier au problème de "A RenderFlex overflowed"
     return SingleChildScrollView(
       child: Column(
         children: [
-          MyPaddingCustomWith(
+          MyPaddingCustomView(
             top: 50,
             bottom: 50,
-
-            ///Padding a partir du bord de l'écran
             left: 20,
             right: 20,
             unWidget: Card(
@@ -92,14 +93,12 @@ class _AuthentificationControllerState
               ),
               color: cColorWhite,
               elevation: 7,
-
-              ///Card invisible si pas de child !!!
-              child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-                  ///l'index 0 est pour un utilisateur deja enregistré
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
                       child: Column(
+                        // si true, on affiche les champs de connexion, sinon on affiche les champs de création de compte
                         children: listTextFields((index == 0)),
                       ),
                       margin: EdgeInsets.only(
@@ -115,7 +114,7 @@ class _AuthentificationControllerState
     );
   }
 
-  ///Liste des textfields pour la connexion ou la creation de compte
+  /// Retourne une liste de textfield en fonction de l'index passé en paramètre (0 pour un utilisateur deja enregistré) et de la variable _isUserConnected
   List<Widget> listTextFields(bool isUserConnected) {
     // On cree une liste de textfield
     List<Widget> widgets = [];
@@ -159,11 +158,12 @@ class _AuthentificationControllerState
     return widgets;
   }
 
-  void _gestionDeConnexion() {
+  /// Gestion de la connexion ou de la création de compte en fonction de la valeur de _isUserConnected (true = connexion, false = création de compte)
+  void _gestionnaireDeConnexion() {
     if (_adresseEmail != null) {
       if (_motDePasse != null) {
         if (_isUserConnected) {
-          //Connexion
+          // Connexion de l'utilisateur avec l'adresse email et le mot de passe
           FirebaseController()
               .seConnecter(_adresseEmail, _motDePasse)
               .then((value) => print(value!.uid))
@@ -174,7 +174,7 @@ class _AuthentificationControllerState
           //Création de compte
           if (_prenom != null) {
             if (_nom != null) {
-              //Méthode pour créer un utilisateur
+              // Création de compte avec l'adresse email, le mot de passe, le nom, le prenom
               FirebaseController()
                   .creationDeCompte(
                       _adresseEmail, _motDePasse, _prenom, _nom, _imageUrl)
@@ -183,37 +183,40 @@ class _AuthentificationControllerState
                 alerte(onError.toString());
               });
             } else {
-              //Alerte pas de nom
+              // Erreur : le nom n'est pas renseigné
               alerte("Aucun nom n'à été renseigné");
             }
           } else {
-            //Alerte pas de prénom
+            // Erreur : le prenom n'est pas renseigné
             alerte("Aucun prénom n'à été renseigné");
           }
         }
       } else {
-        //Alerte pas de mdp
+        // Erreur : le mot de passe n'est pas renseigné
         alerte("Aucun mot de passe n'à été renseigné");
       }
     } else {
-      //Alerte pas d'adresse email
+      // Erreur : l'adresse email n'est pas renseigné
       alerte("Aucune adresse email n'à été renseigné");
     }
   }
 
+  /// Affichage d'une alerte avec le texte passé en paramètre (message d'erreur)
   Future<dynamic> alerte(String message) {
     Text title = Text('Erreur');
     Text msg = Text(message);
     TextButton okButton = TextButton(
         onPressed: () => Navigator.of(context).pop(), child: Text('ok'));
-// Une alerte est affiché selon l'OS utilisé.
+// Affichage de l'alerte avec le titre, le message et le bouton ok (fermeture de l'alerte)
     return showDialog(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
+          // Si iOS on affiche une alerte iOS
           return (Theme.of(context).platform == TargetPlatform.iOS)
               ? CupertinoAlertDialog(title: title, content: msg, actions: [])
               : AlertDialog(
+                  // Sinon on affiche une alerte Android
                   title: title,
                   content: msg,
                   actions: [okButton],

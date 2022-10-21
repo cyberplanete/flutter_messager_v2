@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
-class MyPaddingCustomWith extends Padding {
+/// Un widget qui permet de créer un padding personnalisé avec une largeur et une hauteur fixe
+class MyPaddingCustomView extends Padding {
   final double top;
   final double left;
   final double right;
   final double bottom;
   final Widget? unWidget;
-  MyPaddingCustomWith(
+  MyPaddingCustomView(
       {@required this.unWidget,
       this.top = 10.0,
       this.right = 0,
