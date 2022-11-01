@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// MessageController est un widget qui permet de créer un message avec un texte et une image
 class MessagesController extends StatefulWidget {
   const MessagesController({Key? key}) : super(key: key);
 

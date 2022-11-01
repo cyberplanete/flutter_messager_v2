@@ -7,8 +7,8 @@ import 'package:flutter_messager_v2/controller/messagesController.dart';
 import 'package:flutter_messager_v2/controller/profilesController.dart';
 
 class MainAppController extends StatelessWidget {
-  User? utilisateurFirebase =
-      FirebaseController().firebase_auth_instance.currentUser;
+  // j'instancie la classe FireBaseController pour pouvoir utiliser ses méthodes
+  User? utilisateurFirebase = FirebaseController().firebase_auth_instance.currentUser;
 
   get tabBuilder => null;
 
@@ -16,7 +16,7 @@ class MainAppController extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentPlatform = Theme.of(context).platform;
 
-    /// Version IOS
+    /// Création de la barre de navigation en bas de l'écran (bottomNavigationBar)
     if (currentPlatform == TargetPlatform.iOS) {
       return CupertinoTabScaffold(
         tabBar: CupertinoTabBar(
@@ -31,12 +31,11 @@ class MainAppController extends StatelessWidget {
         ),
         tabBuilder: (BuildContext buildContext, int index) {
           Widget controllerSelected = listOfControllers()[index];
-          return Scaffold(
-              appBar: AppBar(title: Text('Flutter Messager')),
-              body: controllerSelected);
+          return Scaffold(appBar: AppBar(title: Text('Flutter Messager')), body: controllerSelected);
         },
       );
     } else {
+      // Android
       return DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -60,6 +59,7 @@ class MainAppController extends StatelessWidget {
     }
   }
 
+  /// Liste des controllers à afficher dans le body de la page principale (MainAppController)
   List<Widget> listOfControllers() {
     return [MessagesController(), ContactsController(), ProfilesController()];
   }

@@ -8,12 +8,10 @@ class AuthentificationController extends StatefulWidget {
   const AuthentificationController({Key? key}) : super(key: key);
 
   @override
-  _AuthentificationControllerState createState() =>
-      _AuthentificationControllerState();
+  _AuthentificationControllerState createState() => _AuthentificationControllerState();
 }
 
-class _AuthentificationControllerState
-    extends State<AuthentificationController> {
+class _AuthentificationControllerState extends State<AuthentificationController> {
   // par défaut, l'utilisateur est connecté (true) ou non (false).
   bool _isUserConnected = true;
   var _adresseEmail;
@@ -57,13 +55,11 @@ class _AuthentificationControllerState
           TextButton(
             onPressed: () {
               setState(() {
-                _isUserConnected =
-                    !_isUserConnected; // changement de l'état de l'utilisateur (connecté ou non) lors du clic sur le bouton
+                _isUserConnected = !_isUserConnected; // changement de l'état de l'utilisateur (connecté ou non) lors du clic sur le bouton
               });
             },
             // affichage du texte du bouton en fonction de l'état de l'utilisateur
-            child: Text(
-                (_isUserConnected) ? "Authentification" : "Creation de compte"),
+            child: Text((_isUserConnected) ? "Authentification" : "Creation de compte"),
           ),
           ElevatedButton(
             onPressed: () {
@@ -93,18 +89,15 @@ class _AuthentificationControllerState
               ),
               color: cColorWhite,
               elevation: 7,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      child: Column(
-                        // si true, on affiche les champs de connexion, sinon on affiche les champs de création de compte
-                        children: listTextFields((index == 0)),
-                      ),
-                      margin: EdgeInsets.only(
-                          left: 20, right: 20, top: 15, bottom: 15),
-                    )
-                  ]
+              child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                Container(
+                  child: Column(
+                    // si true, on affiche les champs de connexion, sinon on affiche les champs de création de compte
+                    children: listTextFields((index == 0)),
+                  ),
+                  margin: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
+                )
+              ]
                   //listOfUserTextField((index == 0)),
                   ),
             ),
@@ -114,7 +107,7 @@ class _AuthentificationControllerState
     );
   }
 
-  /// Retourne une liste de textfield en fonction de l'index passé en paramètre (0 pour un utilisateur deja enregistré) et de la variable _isUserConnected
+  /// Retourne une liste de textfield pour la connexion ou la création de compte en fonction de l'index passé en paramètre (0 ou 1)
   List<Widget> listTextFields(bool isUserConnected) {
     // On cree une liste de textfield
     List<Widget> widgets = [];
@@ -164,10 +157,7 @@ class _AuthentificationControllerState
       if (_motDePasse != null) {
         if (_isUserConnected) {
           // Connexion de l'utilisateur avec l'adresse email et le mot de passe
-          FirebaseController()
-              .seConnecter(_adresseEmail, _motDePasse)
-              .then((value) => print(value!.uid))
-              .catchError((onError) {
+          FirebaseController().seConnecter(_adresseEmail, _motDePasse).then((value) => print(value!.uid)).catchError((onError) {
             alerte(onError.toString());
           });
         } else {
@@ -176,8 +166,7 @@ class _AuthentificationControllerState
             if (_nom != null) {
               // Création de compte avec l'adresse email, le mot de passe, le nom, le prenom
               FirebaseController()
-                  .creationDeCompte(
-                      _adresseEmail, _motDePasse, _prenom, _nom, _imageUrl)
+                  .creationDeCompte(_adresseEmail, _motDePasse, _prenom, _nom, _imageUrl)
                   .then((value) => print(value!.uid))
                   .catchError((onError) {
                 alerte(onError.toString());
@@ -205,8 +194,7 @@ class _AuthentificationControllerState
   Future<dynamic> alerte(String message) {
     Text title = Text('Erreur');
     Text msg = Text(message);
-    TextButton okButton = TextButton(
-        onPressed: () => Navigator.of(context).pop(), child: Text('ok'));
+    TextButton okButton = TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('ok'));
 // Affichage de l'alerte avec le titre, le message et le bouton ok (fermeture de l'alerte)
     return showDialog(
         barrierDismissible: false,

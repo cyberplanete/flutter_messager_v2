@@ -7,9 +7,9 @@ import 'package:flutter_messager_v2/model/Utilisateur.dart';
 class FirebaseController {
   // Instance de la base de données de firebase (Cloud Firestore)
   final firebase_auth_instance = FirebaseAuth.instance;
-
   // On récupère les utilisateurs de la base de données de firebase (Cloud Firestore)
-  static final entry_user = FirebaseDatabase.instance.ref().child("utilisateurs");
+
+  static final utilisateursCollection = FirebaseDatabase.instance.ref().child("utilisateurs");
   static final firestore_instance = FirebaseFirestore.instance;
   final firebase_collectionUtilisateurs = firestore_instance.collection("utilisateurs");
 
@@ -17,11 +17,11 @@ class FirebaseController {
   Future<User?> creationDeCompte(String email, String mdp, String prenom, String nom, String imageUrl) async {
     // Création de l'utilisateur dans la base de données de firebase
     final create = await firebase_auth_instance.createUserWithEmailAndPassword(email: email, password: mdp);
-    // Récupération de l'utilisateur
+    // On récupère l'utilisateur créé dans la base de données de firebase (Cloud Firestore)
     final User? user = create.user;
-    // Récupération de l'uid de l'utilisateur
+    // On vérifie que l'utilisateur n'est pas null
     String utilisateurUid = user!.uid;
-    // Création d'un utilisateur dans la base de données de firebase
+    // on crée un objet utilisateur avec les informations de l'utilisateur
     Map<String, String> userData = {
       "uid": utilisateurUid,
       "nom": nom,

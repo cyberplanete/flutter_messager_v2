@@ -27,7 +27,7 @@ class Utilisateur {
     }
   }
 
-  /// Pour l'envoyer vers firebase
+  /// Map pour la base de données de firebase (Cloud Firestore) et la base de données de firebase (Realtime Database)
   Map<String, String?> toMap() {
     return {
       "uid": uid,

@@ -11,9 +11,10 @@ class ProfilesController extends StatefulWidget {
   _ProfilesControllerState createState() => _ProfilesControllerState();
 }
 
-//TODO pull to refresh
+/// _ProfilesControllerState est un widget qui permet de créer un profil avec un texte et une image
 class _ProfilesControllerState extends State<ProfilesController> {
   Utilisateur? utilisateur;
+  // par défaut, l'utilisateur est connecté (true) ou non (false). bool _isUserConnected = true;
   User? currentUser = FirebaseController().firebase_auth_instance.currentUser;
   String? prenom;
   String? nom;
@@ -21,16 +22,17 @@ class _ProfilesControllerState extends State<ProfilesController> {
   @override
   void initState() {
     super.initState();
-    _getUserProfile();
+    _getUserProfile(); // Récupération du profil de l'utilisateur
   }
 
   @override
   Widget build(BuildContext context) {
     return (utilisateur == null)
         ? Center(
-            child: Text("Chargement ..."),
+            child: Text("Chargement ..."), // Texte affiché lors du chargement du profil
           )
         : SingleChildScrollView(
+            // Permet de scroller la page
             child: Container(
             margin: EdgeInsets.all(20),
             child: Column(
@@ -52,8 +54,7 @@ class _ProfilesControllerState extends State<ProfilesController> {
                     });
                   },
                 ),
-                ElevatedButton(
-                    child: Text("Sauvegarder"), onPressed: saveChanges),
+                ElevatedButton(child: Text("Sauvegarder"), onPressed: saveChanges),
                 TextButton(
                     child: Text("Se déconnecter"),
                     onPressed: () {
@@ -64,19 +65,18 @@ class _ProfilesControllerState extends State<ProfilesController> {
           ));
   }
 
+  /// Se déconnecte de l'application et retourne à la page d'authentification
   Future<void> logOut() async {
     Text titre = Text("Se déconnecter");
     Text contenant = Text("Etes vous sur de vouloir vous deconnecter ?");
     ElevatedButton noBtn = ElevatedButton(
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(); // Retourne à la page précédente
         },
         child: Text("non"));
     ElevatedButton yesBtn = ElevatedButton(
         onPressed: () {
-          FirebaseController()
-              .seDeconnecter()
-              .then((bool) => Navigator.of(context).pop());
+          FirebaseController().seDeconnecter().then((bool) => Navigator.of(context).pop()); // Se déconnecte de l'application
         },
         child: Text("oui"));
     return showDialog(
@@ -96,8 +96,9 @@ class _ProfilesControllerState extends State<ProfilesController> {
         });
   }
 
+  /// Fonction qui permet de sauvegarder les modifications du profil
   saveChanges() {
-    Map<String, String?> map = utilisateur!.toMap();
+    Map<String, String?> map = utilisateur!.toMap(); // Récupération des données du profil
     if (prenom != null && prenom != "") {
       map["prenom"] = prenom!;
     }
@@ -108,7 +109,7 @@ class _ProfilesControllerState extends State<ProfilesController> {
     _getUserProfile();
   }
 
-  /// Methode permettant d'obtenir l'utilisateur
+  /// _getUserProfile permet de récupérer les informations de l'utilisateur connecté et de les afficher dans le widget ProfileController
   _getUserProfile() {
     FirebaseController().getUtilisateur(currentUser!.uid).then((value) {
       setState(() {
