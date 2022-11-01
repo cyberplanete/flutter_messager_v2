@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_messager_v2/controller/fireBaseController.dart';
 import 'package:flutter_messager_v2/model/Utilisateur.dart';
 
+import '../customImage.dart';
+
 class ProfilesController extends StatefulWidget {
   const ProfilesController({Key? key}) : super(key: key);
 
@@ -38,6 +40,12 @@ class _ProfilesControllerState extends State<ProfilesController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                CustomImage(
+                  imageUrl: utilisateur!.imageUrl,
+                  initiales: utilisateur!.initiales,
+                  radius: MediaQuery.of(context).size.width /
+                      4, // Affichage de l'image de profil de l'utilisateur soit en carré soit en rond en fonction de la taille de l'écran (MediaQuery.of(context).size.width)
+                ),
                 TextField(
                   decoration: InputDecoration(hintText: utilisateur?.prenom),
                   onChanged: (str) {
