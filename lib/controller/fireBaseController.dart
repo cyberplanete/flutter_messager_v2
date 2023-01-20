@@ -1,7 +1,12 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_messager_v2/model/Utilisateur.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// Classe de gestion de Firebase pour les messages et les utilisateurs de l'application de messagerie instantanée
 class FirebaseController {
@@ -55,5 +60,16 @@ class FirebaseController {
     DocumentSnapshot snapshot = await firebase_collectionUtilisateurs.doc(uid).get();
     Utilisateur utilisateur = Utilisateur(snapshot);
     return utilisateur;
+  }
+  static final entryCollection = FirebaseStorage.instance.ref();
+   final storageUsers = entryCollection.child("users");
+
+   // On sauvegarde l'image dans le storage de firebase
+  Future<String?> savePicture(File image, Reference userReference) async {
+
+    UploadTask uploadTask = userReference.putFile(image);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String url = await taskSnapshot.ref.getDownloadURL();
+    return url;
   }
 }

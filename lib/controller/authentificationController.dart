@@ -65,7 +65,7 @@ class _AuthentificationControllerState extends State<AuthentificationController>
             onPressed: () {
               _gestionnaireDeConnexion();
             },
-            child: Text('Connecté'),
+            child: Text('Se connecter'),
           ), // SizedBox(height: 10,)
         ],
       ),
