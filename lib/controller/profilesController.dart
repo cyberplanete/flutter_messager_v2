@@ -42,17 +42,16 @@ class _ProfilesControllerState extends State<ProfilesController> {
         : SingleChildScrollView(
             // Permet de scroller la page
             child: Container(
-            margin: EdgeInsets.all(20),
+            margin: EdgeInsets.all(10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CustomImage(
                     imageUrl: utilisateur!.imageUrl,
                     initiales: utilisateur!.initiales,
-                    radius: MediaQuery.of(context)
-                        .size
-                        .width // Affichage de l'image de profil de l'utilisateur soit en carré soit en rond en fonction de la taille de l'écran (MediaQuery.of(context).size.width)
-                    ),
+                    radius: MediaQuery.of(context).size.width / 3),
+                // Affichage de l'image de profil de l'utilisateur soit en carré soit en rond en fonction de la taille de l'écran (MediaQuery.of(context).size.width)
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
