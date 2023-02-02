@@ -11,7 +11,7 @@ import 'package:image_picker/image_picker.dart';
 /// Classe de gestion de Firebase pour les messages et les utilisateurs de l'application de messagerie instantanée
 class FirebaseController {
   // Instance de la base de données de firebase (Cloud Firestore)
-  final firebase_auth_instance = FirebaseAuth.instance;
+  final auth_instance = FirebaseAuth.instance;
 
   // On récupère les utilisateurs de la base de données de firebase (Cloud Firestore)
 
@@ -23,7 +23,7 @@ class FirebaseController {
   Future<User?> creationDeCompte(String email, String mdp, String prenom,
       String nom, String imageUrl) async {
     // Création de l'utilisateur dans la base de données de firebase
-    final create = await firebase_auth_instance.createUserWithEmailAndPassword(
+    final create = await auth_instance.createUserWithEmailAndPassword(
         email: email, password: mdp);
     // On récupère l'utilisateur créé dans la base de données de firebase (Cloud Firestore)
     final User? user = create.user;
@@ -56,7 +56,7 @@ class FirebaseController {
 
   /// Fonction qui permet de se déconnecter d'un compte utilisateur
   Future<bool> seDeconnecter() async {
-    return firebase_auth_instance.signOut().then((value) => true);
+    return auth_instance.signOut().then((value) => true);
   }
 
   /// Fonction qui permet de récupérer un utilisateur dans la base de données de firebase

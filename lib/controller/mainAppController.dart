@@ -8,13 +8,15 @@ import 'package:flutter_messager_v2/controller/profilesController.dart';
 
 class MainAppController extends StatelessWidget {
   // j'instancie la classe FireBaseController pour pouvoir utiliser ses méthodes
-  User? utilisateurFirebase = FirebaseController().firebase_auth_instance.currentUser;
+  User? utilisateurFirebase = FirebaseController().auth_instance.currentUser;
 
   get tabBuilder => null;
 
   @override
   Widget build(BuildContext context) {
-    final currentPlatform = Theme.of(context).platform;
+    final currentPlatform = Theme
+        .of(context)
+        .platform;
 
     /// Création de la barre de navigation en bas de l'écran (bottomNavigationBar)
     if (currentPlatform == TargetPlatform.iOS) {
@@ -31,7 +33,8 @@ class MainAppController extends StatelessWidget {
         ),
         tabBuilder: (BuildContext buildContext, int index) {
           Widget controllerSelected = listOfControllers()[index];
-          return Scaffold(appBar: AppBar(title: Text('Flutter Messager')), body: controllerSelected);
+          return Scaffold(appBar: AppBar(title: Text('Flutter Messager')),
+              body: controllerSelected);
         },
       );
     } else {
