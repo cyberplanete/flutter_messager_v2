@@ -6,6 +6,7 @@ class CustomImage extends StatelessWidget {
   final String? initiales;
   final double? radius;
 
+
   CustomImage({this.imageUrl, this.initiales, this.radius});
 
   @override
@@ -17,12 +18,17 @@ class CustomImage extends StatelessWidget {
         backgroundColor: Colors.blue,
         child: Text(
           initiales?.toUpperCase() ?? "",
-          style: TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: radius),
+          style: TextStyle(
+              color: Colors.red,
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.bold,
+              fontSize: radius),
         ),
       );
     } else {
       // Sinon, on affiche l'image de profil
-      ImageProvider imageProvider = CachedNetworkImageProvider(imageUrl!); // NetworkImage(imageUrl!);
+      ImageProvider imageProvider =
+      CachedNetworkImageProvider(imageUrl!); // NetworkImage(imageUrl!);
       // Si radius est null, alors on considère que c'est pour les messages
       if (radius == null) {
         return InkWell(
