@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_messager_v2/controller/fireBaseController.dart';
 import 'package:flutter_messager_v2/model/Utilisateur.dart';
 
+import '../customImage.dart';
+
 /// ContactsController est un widget qui permet de créer un contact avec un texte et une image
 class ContactsController extends StatefulWidget {
   const ContactsController({Key? key}) : super(key: key);
@@ -19,18 +21,31 @@ class _ContactsControllerState extends State<ContactsController> {
   @override
   Widget build(BuildContext context) {
     return FirebaseAnimatedList(
-        query: FirebaseDatabase.instance.ref().child("utilisateurs"),
+        query: FirebaseDatabase.instance
+            .ref()
+            .child("utilisateurs")
+            .orderByChild("nom"),
         itemBuilder: (BuildContext context, DataSnapshot dataSnapshot,
             Animation<double> animation, int index) {
           Utilisateur newUtilisateur = Utilisateur.fromSnapshot(dataSnapshot);
           if (newUtilisateur.uid !=
               FirebaseController().auth_instance.currentUser?.uid) {
             return ListTile(
+              leading: CustomImage(
+                  imageUrl: newUtilisateur.imageUrl,
+                  initiales: newUtilisateur.initiales,
+                  radius: 20),
               title: Text(newUtilisateur.prenom[0].toUpperCase() +
                   newUtilisateur.prenom.substring(1) +
                   " " +
                   newUtilisateur.nom[0].toUpperCase() +
                   newUtilisateur.nom.substring(1)),
+              trailing: IconButton(
+                icon: Icon(Icons.message),
+                onPressed: () {
+
+                },
+              ),
             );
           } else {
             return Container();
