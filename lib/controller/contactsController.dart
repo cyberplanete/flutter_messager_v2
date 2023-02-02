@@ -24,7 +24,11 @@ class _ContactsControllerState extends State<ContactsController> {
             Animation<double> animation, int index) {
           Utilisateur newUtilisateur = Utilisateur.fromSnapshot(dataSnapshot);
           return ListTile(
-            title: Text("${newUtilisateur.prenom} ${newUtilisateur.nom}"),
+            title: Text(newUtilisateur.prenom[0].toUpperCase() +
+                newUtilisateur.prenom.substring(1) +
+                " " +
+                newUtilisateur.nom[0].toUpperCase() +
+                newUtilisateur.nom.substring(1)),
           );
         });
   }

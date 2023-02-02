@@ -16,11 +16,8 @@ class FirebaseController {
   // On récupère les utilisateurs de la base de données de firebase (Cloud Firestore)
 
   static final utilisateursCollection =
-      FirebaseDatabase.instance.ref().child("utilisateurs");
+  FirebaseDatabase.instance.ref().child("utilisateurs");
 
-  //static final firestore_instance = FirebaseFirestore.instance;
-  //static final firebase_collectionUtilisateurs =
-  //   firestore_instance.collection("utilisateurs");
 
   /// Fonction qui permet de créer un utilisateur dans la base de données de firebase
   Future<User?> creationDeCompte(String email, String mdp, String prenom,
