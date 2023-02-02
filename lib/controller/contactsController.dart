@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_messager_v2/controller/fireBaseController.dart';
+import 'package:flutter_messager_v2/controller/tchatController.dart';
 import 'package:flutter_messager_v2/model/Utilisateur.dart';
 
 import '../customImage.dart';
@@ -43,7 +44,11 @@ class _ContactsControllerState extends State<ContactsController> {
               trailing: IconButton(
                 icon: Icon(Icons.message),
                 onPressed: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return TchatController(
+                      tchatUser: newUtilisateur,
+                    );
+                  }));
                 },
               ),
             );
