@@ -39,4 +39,9 @@ class Utilisateur {
       "initiales": initiales,
     };
   }
+
+  String fullName() {
+    return prenom[0].toUpperCase() + prenom.substring(1) + " " +
+        nom[0].toUpperCase() + nom.substring(1);
+  }
 }
