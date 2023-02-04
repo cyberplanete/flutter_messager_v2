@@ -10,7 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import '../customImage.dart';
 
 class ProfilesController extends StatefulWidget {
-  const ProfilesController({Key? key}) : super(key: key);
+  String id;
+
+  ProfilesController({required String this.id});
 
   @override
   _ProfilesControllerState createState() => _ProfilesControllerState();
@@ -21,7 +23,7 @@ class _ProfilesControllerState extends State<ProfilesController> {
   Utilisateur? utilisateur;
 
   // par défaut, l'utilisateur est connecté (true) ou non (false). bool _isUserConnected = true;
-  User? currentUser = FirebaseController().auth_instance.currentUser;
+  User? currentUser = FirebaseController.auth.currentUser;
   String? prenom;
   String? nom;
 
@@ -36,70 +38,67 @@ class _ProfilesControllerState extends State<ProfilesController> {
   Widget build(BuildContext context) {
     return (utilisateur == null)
         ? Center(
-      child: Text(
-          "Chargement ..."), // Texte affiché lors du chargement du profil
-    )
+            child: Text(
+                "Chargement ..."), // Texte affiché lors du chargement du profil
+          )
         : SingleChildScrollView(
-      // Permet de scroller la page
-        child: Container(
-          margin: EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CustomImage(
-                  imageUrl: utilisateur!.imageUrl,
-                  initiales: utilisateur!.initiales,
-                  radius: MediaQuery
-                      .of(context)
-                      .size
-                      .width / 3),
-              // Affichage de l'image de profil de l'utilisateur soit en carré soit en rond en fonction de la taille de l'écran (MediaQuery.of(context).size.width)
+            // Permet de scroller la page
+            child: Container(
+            margin: EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                CustomImage(
+                    imageUrl: utilisateur?.imageUrl,
+                    initiales: utilisateur?.initiales,
+                    radius: MediaQuery.of(context).size.width / 3),
+                // Affichage de l'image de profil de l'utilisateur soit en carré soit en rond en fonction de la taille de l'écran (MediaQuery.of(context).size.width)
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    // Bouton pour prendre une photo
-                    icon: Icon(Icons.camera_enhance),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      // Bouton pour prendre une photo
+                      icon: Icon(Icons.camera_enhance),
+                      onPressed: () {
+                        takePicture(ImageSource.camera);
+                      },
+                    ),
+                    IconButton(
+                      //Bouton pour afficher la galerie
+                      icon: Icon(Icons.photo_library),
+                      onPressed: () {
+                        takePicture(ImageSource.gallery);
+                      },
+                    )
+                  ],
+                ),
+                TextField(
+                  decoration: InputDecoration(hintText: utilisateur?.prenom),
+                  onChanged: (str) {
+                    setState(() {
+                      prenom = str;
+                    });
+                  },
+                ),
+                TextField(
+                  decoration: InputDecoration(hintText: utilisateur?.nom),
+                  onChanged: (str) {
+                    setState(() {
+                      nom = str;
+                    });
+                  },
+                ),
+                ElevatedButton(
+                    child: Text("Sauvegarder"), onPressed: saveChanges),
+                TextButton(
+                    child: Text("Se déconnecter"),
                     onPressed: () {
-                      takePicture(ImageSource.camera);
-                    },
-                  ),
-                  IconButton(
-                    //Bouton pour afficher la galerie
-                    icon: Icon(Icons.photo_library),
-                    onPressed: () {
-                      takePicture(ImageSource.gallery);
-                    },
-                  )
-                ],
-              ),
-              TextField(
-                decoration: InputDecoration(hintText: utilisateur?.prenom),
-                onChanged: (str) {
-                  setState(() {
-                    prenom = str;
-                  });
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(hintText: utilisateur?.nom),
-                onChanged: (str) {
-                  setState(() {
-                    nom = str;
-                  });
-                },
-              ),
-              ElevatedButton(
-                  child: Text("Sauvegarder"), onPressed: saveChanges),
-              TextButton(
-                  child: Text("Se déconnecter"),
-                  onPressed: () {
-                    logOut();
-                  })
-            ],
-          ),
-        ));
+                      logOut();
+                    })
+              ],
+            ),
+          ));
   }
 
   /// Se déconnecte de l'application et retourne à la page d'authentification
@@ -120,33 +119,31 @@ class _ProfilesControllerState extends State<ProfilesController> {
     return showDialog(
         context: context,
         builder: (BuildContext ctx) {
-          return (Theme
-              .of(context)
-              .platform == TargetPlatform.iOS)
+          return (Theme.of(context).platform == TargetPlatform.iOS)
               ? CupertinoAlertDialog(
-            title: titre,
-            content: contenant,
-            actions: [yesBtn, noBtn],
-          )
+                  title: titre,
+                  content: contenant,
+                  actions: [yesBtn, noBtn],
+                )
               : AlertDialog(
-            title: titre,
-            content: contenant,
-            actions: [yesBtn, noBtn],
-          );
+                  title: titre,
+                  content: contenant,
+                  actions: [yesBtn, noBtn],
+                );
         });
   }
 
   /// Fonction qui permet de sauvegarder les modifications du profil
   saveChanges() {
     Map<String, String?> map =
-    utilisateur!.toMap(); // Récupération des données du profil
+        utilisateur!.toMap(); // Récupération des données du profil
     if (prenom != null && prenom != "") {
       map["prenom"] = prenom!;
     }
     if (nom != null && nom != "") {
       map["nom"] = nom!;
     }
-    FirebaseController().AddOrModifyUser(utilisateur!.uid, map);
+    FirebaseController().AddOrModifyUser(utilisateur?.uid, map);
     _getUserProfile();
   }
 
@@ -164,12 +161,12 @@ class _ProfilesControllerState extends State<ProfilesController> {
   Future<void> takePicture(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile =
-    await picker.pickImage(source: source, maxWidth: 500, maxHeight: 500);
+        await picker.pickImage(source: source, maxWidth: 500, maxHeight: 500);
     if (pickedFile != null) {
       File file = File(pickedFile.path);
       FirebaseController()
           .savePicture(
-          file, FirebaseController().storageUsers.child(utilisateur!.uid))
+              file, FirebaseController().storageUsers.child(utilisateur!.uid!))
           .then((value) {
         Map map = utilisateur!.toMap();
         map["imageUrl"] = value;
