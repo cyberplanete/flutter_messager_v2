@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_messager_v2/controller/fireBaseController.dart';
 import 'package:flutter_messager_v2/controller/tchatController.dart';
 import 'package:flutter_messager_v2/model/Utilisateur.dart';
 
@@ -10,15 +8,15 @@ import '../customImage.dart';
 
 /// ContactsController est un widget qui permet de créer un contact avec un texte et une image
 class ContactsController extends StatefulWidget {
-  const ContactsController({Key? key}) : super(key: key);
+  String id;
+
+  ContactsController({required String this.id});
 
   @override
   _ContactsControllerState createState() => _ContactsControllerState();
 }
 
 class _ContactsControllerState extends State<ContactsController> {
-  var list = FirebaseDatabase.instance.ref().child("utilisateurs");
-
   @override
   Widget build(BuildContext context) {
     return FirebaseAnimatedList(
@@ -28,27 +26,27 @@ class _ContactsControllerState extends State<ContactsController> {
             .orderByChild("nom"),
         itemBuilder: (BuildContext context, DataSnapshot dataSnapshot,
             Animation<double> animation, int index) {
-          Utilisateur newUtilisateur = Utilisateur.fromSnapshot(dataSnapshot);
-          if (newUtilisateur.uid !=
-              FirebaseController().auth_instance.currentUser?.uid) {
+          Utilisateur partenaireDeTchat =
+          new Utilisateur.fromSnapshot(dataSnapshot);
+
+          if (partenaireDeTchat.uid != widget.id) {
             return ListTile(
               leading: CustomImage(
-                  imageUrl: newUtilisateur.imageUrl,
-                  initiales: newUtilisateur.initiales,
+                  imageUrl: partenaireDeTchat.imageUrl,
+                  initiales: partenaireDeTchat.initiales,
                   radius: 20),
-              title: Text(newUtilisateur.prenom[0].toUpperCase() +
-                  newUtilisateur.prenom.substring(1) +
-                  " " +
-                  newUtilisateur.nom[0].toUpperCase() +
-                  newUtilisateur.nom.substring(1)),
+              title: Text(partenaireDeTchat.fullName()),
               trailing: IconButton(
                 icon: Icon(Icons.message),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return TchatController(
-                      tchatUser: newUtilisateur,
-                    );
-                  }));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                          new TchatController(
+                            id: widget.id,
+                            tchatUser: partenaireDeTchat,
+                          )));
                 },
               ),
             );
