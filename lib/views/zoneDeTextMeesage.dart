@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_messager_v2/controller/fireBaseController.dart';
 import 'package:flutter_messager_v2/model/Utilisateur.dart';
 
-class ZoneDeText extends StatefulWidget {
+class ZoneDeTextMessage extends StatefulWidget {
   Utilisateur tchatUSer;
   String utilisateur;
 
-  ZoneDeText({required this.tchatUSer, required this.utilisateur});
+  ZoneDeTextMessage({required this.tchatUSer, required this.utilisateur});
 
   @override
-  ZoneDeTextState createState() => ZoneDeTextState();
+  ZoneDeTextMessageState createState() => ZoneDeTextMessageState();
 }
 
-class ZoneDeTextState extends State<ZoneDeText> {
+class ZoneDeTextMessageState extends State<ZoneDeTextMessage> {
   TextEditingController _textEditingController = TextEditingController();
 
   @override

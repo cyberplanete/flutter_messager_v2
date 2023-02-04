@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_messager_v2/controller/fireBaseController.dart';
 import 'package:flutter_messager_v2/customImage.dart';
 import 'package:flutter_messager_v2/model/Utilisateur.dart';
-import 'package:flutter_messager_v2/views/zoneDeText.dart';
+import 'package:flutter_messager_v2/views/zoneDeTextMeesage.dart';
 
 class TchatController extends StatefulWidget {
   Utilisateur tchatUser;
@@ -67,7 +67,7 @@ class TchatControllerState extends State<TchatController> {
               Divider(
                 height: 2,
               ),
-              ZoneDeText(
+              ZoneDeTextMessage(
                 tchatUSer: widget.tchatUser,
                 utilisateur: widget.id,
               )
