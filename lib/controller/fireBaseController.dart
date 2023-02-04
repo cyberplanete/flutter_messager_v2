@@ -1,30 +1,32 @@
 import 'dart:io';
-import 'dart:ui';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_messager_v2/model/Utilisateur.dart';
-import 'package:image_picker/image_picker.dart';
 
 /// Classe de gestion de Firebase pour les messages et les utilisateurs de l'application de messagerie instantanée
 class FirebaseController {
   // Instance de la base de données de firebase (Cloud Firestore)
-  final auth_instance = FirebaseAuth.instance;
+  static final auth = FirebaseAuth.instance;
 
   // On récupère les utilisateurs de la base de données de firebase (Cloud Firestore)
 
   static final utilisateursCollection =
-  FirebaseDatabase.instance.ref().child("utilisateurs");
+      FirebaseDatabase.instance.ref().child("utilisateurs");
+  static final messagesCollection =
+      FirebaseDatabase.instance.ref().child("messages");
 
+  Future<String?> myId() async {
+    User? user = await auth.currentUser;
+    return user?.uid;
+  }
 
   /// Fonction qui permet de créer un utilisateur dans la base de données de firebase
   Future<User?> creationDeCompte(String email, String mdp, String prenom,
       String nom, String imageUrl) async {
     // Création de l'utilisateur dans la base de données de firebase
-    final create = await auth_instance.createUserWithEmailAndPassword(
-        email: email, password: mdp);
+    final create =
+        await auth.createUserWithEmailAndPassword(email: email, password: mdp);
     // On récupère l'utilisateur créé dans la base de données de firebase (Cloud Firestore)
     final User? user = create.user;
     // On vérifie que l'utilisateur n'est pas null
@@ -43,8 +45,8 @@ class FirebaseController {
   }
 
   /// Ajouter ou modifier un utilisateur dans la base de données de Firebase
-  void AddOrModifyUser(String utilisateurUid, Map<String, String?> userData) {
-    utilisateursCollection.child(utilisateurUid).set(userData);
+  void AddOrModifyUser(String? utilisateurUid, Map<String, String?> userData) {
+    utilisateursCollection.child(utilisateurUid!).set(userData);
   }
 
   /// Fonction qui permet de se connecter à un compte utilisateur
@@ -56,7 +58,7 @@ class FirebaseController {
 
   /// Fonction qui permet de se déconnecter d'un compte utilisateur
   Future<bool> seDeconnecter() async {
-    return auth_instance.signOut().then((value) => true);
+    return auth.signOut().then((value) => true);
   }
 
   /// Fonction qui permet de récupérer un utilisateur dans la base de données de firebase
@@ -64,6 +66,33 @@ class FirebaseController {
     DataSnapshot snapshot = await utilisateursCollection.child(uid).get();
     Utilisateur utilisateur = Utilisateur.fromSnapshot(snapshot);
     return utilisateur;
+  }
+
+  /// Fonction qui permet de stocker les messages dans la base de données de firebase
+  sendMessages(String utilisateurId, Utilisateur tchatUser, String message) {
+    //id1 et id2
+    String ref = getMesssagesRef(utilisateurId, tchatUser.uid);
+    String date = DateTime.now().millisecondsSinceEpoch.toString();
+    Map messageMap = {
+      "From": utilisateurId,
+      "To": tchatUser.uid,
+      "Message": message,
+      "Time": date,
+    };
+    // Classement des message par ref et date
+    messagesCollection.child(ref).child(date).set(messageMap);
+  }
+
+  /// Fonction qui permet la reference des conversations entre les utilisateurs
+  getMesssagesRef(String? from, String? to) {
+    List<String?> ids = [from, to];
+    ids.sort((a, b) => a!.compareTo(b!)); //sort les ids par ordre alphabétique
+    String ref = "";
+    for (var x in ids) {
+      ref += (x! + "_");
+    }
+    ;
+    return ref;
   }
 
   static final entryCollection = FirebaseStorage.instance.ref();
