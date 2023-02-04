@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class Utilisateur {
-  String uid = "";
-  String prenom = "";
-  String nom = "";
-  String imageUrl = "";
-  String adresseEmail = "";
-  String initiales = "";
+  String? uid;
+  String? prenom;
+  String? nom;
+  String? imageUrl;
+  String? adresseEmail;
+  String? initiales;
 
   Utilisateur.fromSnapshot(DataSnapshot snapshot) {
     var data = snapshot.value as Map?;
@@ -18,8 +18,8 @@ class Utilisateur {
       imageUrl = data["imageUrl"];
       adresseEmail = data["adresseEmail"];
       if (prenom != null && nom != null) {
-        if (prenom.length > 0 && nom.length > 0) {
-          this.initiales = prenom[0] + nom[0];
+        if (prenom!.length > 0 && nom!.length > 0) {
+          this.initiales = prenom![0] + nom![0];
           //this.initiales = map.get("initiales");
         }
       } else {
@@ -41,7 +41,13 @@ class Utilisateur {
   }
 
   String fullName() {
-    return prenom[0].toUpperCase() + prenom.substring(1) + " " +
-        nom[0].toUpperCase() + nom.substring(1);
+    if (prenom != null && nom != null) {
+      return prenom![0].toUpperCase() +
+          prenom!.substring(1) +
+          " " +
+          nom![0].toUpperCase() +
+          nom!.substring(1);
+    }
+    return "";
   }
 }
