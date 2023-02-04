@@ -6,17 +6,30 @@ import 'package:flutter_messager_v2/controller/fireBaseController.dart';
 import 'package:flutter_messager_v2/controller/messagesController.dart';
 import 'package:flutter_messager_v2/controller/profilesController.dart';
 
-class MainAppController extends StatelessWidget {
-  // j'instancie la classe FireBaseController pour pouvoir utiliser ses méthodes
-  User? utilisateurFirebase = FirebaseController().auth_instance.currentUser;
+class MainAppController extends StatefulWidget {
+  MainAppState createState() => new MainAppState();
+}
+
+class MainAppState extends State<MainAppController> {
+  late String id;
 
   get tabBuilder => null;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    FirebaseController().myId().then((value) {
+      setState(() {
+        id = value!;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final currentPlatform = Theme
-        .of(context)
-        .platform;
+    final currentPlatform = Theme.of(context).platform;
 
     /// Création de la barre de navigation en bas de l'écran (bottomNavigationBar)
     if (currentPlatform == TargetPlatform.iOS) {
@@ -33,7 +46,8 @@ class MainAppController extends StatelessWidget {
         ),
         tabBuilder: (BuildContext buildContext, int index) {
           Widget controllerSelected = listOfControllers()[index];
-          return Scaffold(appBar: AppBar(title: Text('Flutter Messager')),
+          return Scaffold(
+              appBar: AppBar(title: Text('Flutter Messager')),
               body: controllerSelected);
         },
       );
@@ -64,6 +78,12 @@ class MainAppController extends StatelessWidget {
 
   /// Liste des controllers à afficher dans le body de la page principale (MainAppController)
   List<Widget> listOfControllers() {
-    return [MessagesController(), ContactsController(), ProfilesController()];
+    return [
+      MessagesController(),
+      ContactsController(
+        id: id,
+      ),
+      ProfilesController(id: id)
+    ];
   }
 }
