@@ -11,14 +11,17 @@ class FirebaseController {
 
   // On récupère les utilisateurs de la base de données de firebase (Cloud Firestore)
 
-  static final utilisateursCollection =
+  static final entry_utilisateurs =
       FirebaseDatabase.instance.ref().child("utilisateurs");
-  static final messagesCollection =
+  static final entry_messages =
       FirebaseDatabase.instance.ref().child("messages");
+  static final entry_conversations =
+      FirebaseDatabase.instance.ref().child("conversations");
 
-  Future<String?> myId() async {
-    User? user = await auth.currentUser;
-    return user?.uid;
+  Future<String> myUserID() async {
+    User user = auth.currentUser!;
+    String id = user.uid;
+    return id;
   }
 
   /// Fonction qui permet de créer un utilisateur dans la base de données de firebase
@@ -46,7 +49,7 @@ class FirebaseController {
 
   /// Ajouter ou modifier un utilisateur dans la base de données de Firebase
   void AddOrModifyUser(String? utilisateurUid, Map<String, String?> userData) {
-    utilisateursCollection.child(utilisateurUid!).set(userData);
+    entry_utilisateurs.child(utilisateurUid!).set(userData);
   }
 
   /// Fonction qui permet de se connecter à un compte utilisateur
@@ -63,24 +66,51 @@ class FirebaseController {
 
   /// Fonction qui permet de récupérer un utilisateur dans la base de données de firebase
   Future<Utilisateur> getUtilisateur(String uid) async {
-    DataSnapshot snapshot = await utilisateursCollection.child(uid).get();
-    Utilisateur utilisateur = Utilisateur.fromSnapshot(snapshot);
-    return utilisateur;
+    // DataSnapshot snapshot = (await entry_utilisateurs.child(uid).once()).snapshot;
+    // return new Utilisateur.fromSnapshot(snapshot);
+
+    DataSnapshot dataSnapshot = await entry_utilisateurs.child(uid).get();
+    return Utilisateur.fromSnapshot(dataSnapshot);
   }
 
   /// Fonction qui permet de stocker les messages dans la base de données de firebase
-  sendMessages(String utilisateurId, Utilisateur tchatUser, String message) {
+  sendMessages(Utilisateur? userReceiver, Utilisateur? currentUserSender,
+      String message, String imageUrl) {
     //id1 et id2
-    String ref = getMesssagesRef(utilisateurId, tchatUser.uid);
+    String ref = getMesssagesRef(currentUserSender?.uid, userReceiver?.uid);
     String date = DateTime.now().millisecondsSinceEpoch.toString();
     Map messageMap = {
-      "From": utilisateurId,
-      "To": tchatUser.uid,
-      "Message": message,
-      "Time": date,
+      "from": currentUserSender?.uid,
+      "to": userReceiver?.uid,
+      "message": message,
+      "date": date,
+      "imageUrl": imageUrl,
     };
     // Classement des message par ref et date
-    messagesCollection.child(ref).child(date).set(messageMap);
+    entry_messages.child(ref).child(date).set(messageMap);
+
+    // Notification du dernier message pour l'utilisateur courant sauvegardé dans la base de données de firebase
+    entry_conversations
+        .child(currentUserSender!.uid!)
+        .child(userReceiver!.uid!)
+        .set(setConversation(
+            currentUserSender.uid, userReceiver, message, date));
+    // Notification du dernier message pour l'utilisateur destinataire sauvegardé dans la base de données de firebase
+    entry_conversations
+        .child(userReceiver.uid!)
+        .child(currentUserSender.uid!)
+        .set(setConversation(
+            currentUserSender.uid, currentUserSender, message, date));
+  }
+
+  setConversation(
+      String? sender, Utilisateur user, String lastMessage, String date) {
+    Map map = user.toMap();
+    map["monId"] = sender;
+    map["lastMessage"] = lastMessage;
+    map["dateString"] = date;
+
+    return map;
   }
 
   /// Fonction qui permet la reference des conversations entre les utilisateurs
