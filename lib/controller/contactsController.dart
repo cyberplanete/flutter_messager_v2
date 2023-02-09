@@ -8,9 +8,11 @@ import '../customImage.dart';
 
 /// ContactsController est un widget qui permet de créer un contact avec un texte et une image
 class ContactsController extends StatefulWidget {
-  String id;
+  String? userSenderID;
 
-  ContactsController({required String this.id});
+  ContactsController({required String userSenderID}) {
+    this.userSenderID = userSenderID;
+  }
 
   @override
   _ContactsControllerState createState() => _ContactsControllerState();
@@ -27,9 +29,9 @@ class _ContactsControllerState extends State<ContactsController> {
         itemBuilder: (BuildContext context, DataSnapshot dataSnapshot,
             Animation<double> animation, int index) {
           Utilisateur partenaireDeTchat =
-          new Utilisateur.fromSnapshot(dataSnapshot);
+              new Utilisateur.fromSnapshot(dataSnapshot);
 
-          if (partenaireDeTchat.uid != widget.id) {
+          if (partenaireDeTchat.uid != widget.userSenderID) {
             return ListTile(
               leading: CustomImage(
                   imageUrl: partenaireDeTchat.imageUrl,
@@ -42,11 +44,10 @@ class _ContactsControllerState extends State<ContactsController> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                          new TchatController(
-                            id: widget.id,
-                            tchatUser: partenaireDeTchat,
-                          )));
+                          builder: (context) => new TchatController(
+                                userSenderID: widget.userSenderID!,
+                                user_receiver: partenaireDeTchat,
+                              )));
                 },
               ),
             );
