@@ -10,9 +10,11 @@ import 'package:image_picker/image_picker.dart';
 import '../customImage.dart';
 
 class ProfilesController extends StatefulWidget {
-  String id;
+  String? userSenderID;
 
-  ProfilesController({required String this.id});
+  ProfilesController({required String userSenderID}) {
+    this.userSenderID = userSenderID;
+  }
 
   @override
   _ProfilesControllerState createState() => _ProfilesControllerState();
