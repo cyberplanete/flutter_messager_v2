@@ -3,25 +3,28 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_messager_v2/controller/fireBaseController.dart';
 import 'package:flutter_messager_v2/customImage.dart';
+import 'package:flutter_messager_v2/model/Message.dart';
 import 'package:flutter_messager_v2/model/Utilisateur.dart';
-import 'package:flutter_messager_v2/views/zoneDeTextMeesage.dart';
+import 'package:flutter_messager_v2/widgets/zoneDeTextMessage.dart';
+
+import '../widgets/chatBuble.dart';
 
 class TchatController extends StatefulWidget {
-  Utilisateur tchatUser;
-  String id;
+  Utilisateur? user_receiver;
+  String? userSenderID;
 
-  TchatController({required this.tchatUser, required this.id});
+  TchatController(
+      {required Utilisateur? user_receiver, required String userSenderID}) {
+    this.user_receiver = user_receiver;
+    this.userSenderID = userSenderID;
+  }
 
-  @override
   TchatControllerState createState() => TchatControllerState();
 }
 
 class TchatControllerState extends State<TchatController> {
-  String messages = "";
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
         appBar: AppBar(
           title: Row(
@@ -29,10 +32,10 @@ class TchatControllerState extends State<TchatController> {
             children: [
               CustomImage(
                   //TODO Modifier custom image pour être visible dans l'appbar
-                  imageUrl: widget.tchatUser.imageUrl,
-                  initiales: widget.tchatUser.initiales,
+                  imageUrl: widget.user_receiver?.imageUrl,
+                  initiales: widget.user_receiver?.initiales,
                   radius: 20),
-              Text(widget.tchatUser.fullName()),
+              Text(widget.user_receiver!.fullName()),
             ],
           ),
         ),
@@ -42,34 +45,26 @@ class TchatControllerState extends State<TchatController> {
           child: Column(
             children: [
               Flexible(
-                child: (widget.id != null)
-                    ? FirebaseAnimatedList(
-                        query: FirebaseController.messagesCollection.child(
-                            FirebaseController().getMesssagesRef(
-                                widget.id, widget.tchatUser.uid)),
-                        itemBuilder: (BuildContext buildContext,
-                            DataSnapshot dataSnapshot,
-                            Animation<double> animation,
-                            int index) {
-                          final map =
-                              dataSnapshot.value as Map<dynamic, dynamic>;
-                          if (dataSnapshot.value != null) {
-                            messages = map['Message'].toString();
-                          }
-                          return ListTile(
-                            title: Text(messages),
-                          );
-                        })
-                    : Center(
-                        child: CircularProgressIndicator(),
-                      ),
-              ),
+                  child: FirebaseAnimatedList(
+                      reverse: true,
+                      query: FirebaseController.entry_messages.child(
+                          FirebaseController().getMesssagesRef(
+                              widget.userSenderID, widget.user_receiver!.uid)),
+                      itemBuilder: (BuildContext buildContext,
+                          DataSnapshot dataSnapshot,
+                          Animation<double> animation,
+                          int index) {
+                        Message msg = Message(snapshot: dataSnapshot);
+                        print(msg.message);
+                        return new ChatBubble(widget.userSenderID!,
+                            widget.user_receiver!, msg, animation);
+                      })),
               Divider(
                 height: 2,
               ),
               ZoneDeTextMessage(
-                tchatUSer: widget.tchatUser,
-                utilisateur: widget.id,
+                user_receiver: widget.user_receiver,
+                userSenderID: widget.userSenderID!,
               )
             ],
           ),
