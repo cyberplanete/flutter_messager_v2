@@ -6,30 +6,33 @@ import 'package:flutter_messager_v2/controller/fireBaseController.dart';
 import 'package:flutter_messager_v2/controller/messagesController.dart';
 import 'package:flutter_messager_v2/controller/profilesController.dart';
 
+import '../model/Utilisateur.dart';
+
 class MainAppController extends StatefulWidget {
   MainAppState createState() => new MainAppState();
 }
 
 class MainAppState extends State<MainAppController> {
-  late String id;
+  String? userSenderID = "";
+  Utilisateur? userSender;
 
   get tabBuilder => null;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    FirebaseController().myId().then((value) {
+    FirebaseController().myUserID().then((userID) {
       setState(() {
-        id = value!;
+        userSenderID = userID;
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentPlatform = Theme.of(context).platform;
+    final currentPlatform = Theme
+        .of(context)
+        .platform;
 
     /// Création de la barre de navigation en bas de l'écran (bottomNavigationBar)
     if (currentPlatform == TargetPlatform.iOS) {
@@ -79,11 +82,11 @@ class MainAppState extends State<MainAppController> {
   /// Liste des controllers à afficher dans le body de la page principale (MainAppController)
   List<Widget> listOfControllers() {
     return [
-      MessagesController(),
+      MessagesController(userSenderID: userSenderID!),
       ContactsController(
-        id: id,
+        userSenderID: userSenderID!,
       ),
-      ProfilesController(id: id)
+      ProfilesController(userSenderID: userSenderID!)
     ];
   }
 }
