@@ -3,17 +3,36 @@ import 'package:flutter_messager_v2/controller/fireBaseController.dart';
 import 'package:flutter_messager_v2/model/Utilisateur.dart';
 
 class ZoneDeTextMessage extends StatefulWidget {
-  Utilisateur tchatUSer;
-  String utilisateur;
+  Utilisateur? user_receiver;
+  String? userSenderID;
 
-  ZoneDeTextMessage({required this.tchatUSer, required this.utilisateur});
+  ZoneDeTextMessage({required user_receiver , required String this.userSenderID})
+  {
+    this.userSenderID = userSenderID;
+    this.user_receiver = user_receiver;
 
-  @override
-  ZoneDeTextMessageState createState() => ZoneDeTextMessageState();
+  }
+
+  ZoneDeTextMessageState createState() => new ZoneDeTextMessageState();
 }
 
 class ZoneDeTextMessageState extends State<ZoneDeTextMessage> {
   TextEditingController _textEditingController = TextEditingController();
+  Utilisateur? userSender;
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseController().getUtilisateur(widget.userSenderID!).then((value) {
+      setState(() {
+        userSender = value;
+      });
+    });
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +61,12 @@ class ZoneDeTextMessageState extends State<ZoneDeTextMessage> {
   }
 
   void sendMessageOnButtonPressed() {
-    if (_textEditingController.text.isNotEmpty) {
+    if (_textEditingController.text != null) {
       String text = _textEditingController.text;
+
       //Envoyer sur firebase
       FirebaseController()
-          .sendMessages(widget.utilisateur, widget.tchatUSer, text);
+          .sendMessages(widget.user_receiver,userSender , text, widget.user_receiver?.imageUrl??"");
       _textEditingController.clear();
       FocusScope.of(context).requestFocus(
           FocusNode()); //Ferme le clavier apres l'envoi du message
